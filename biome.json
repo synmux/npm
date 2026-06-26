@@ -2,7 +2,7 @@
   "$schema": ".trunk/configs/biome_schema.json",
   "extends": [".trunk/configs/biome.json"],
   "files": {
-    "includes": ["**", "!**/.trunk", "!**/.history", "!**/dist"]
+    "includes": ["!**/.trunk", "!**/.history", "!**/dist"]
   },
   "linter": {
     "rules": {

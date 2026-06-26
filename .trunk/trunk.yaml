@@ -19,6 +19,7 @@ actions:
     - trunk-upgrade-available
 lint:
   disabled:
+    - trivy
     - sort-package-json
     - renovate
     - cspell
@@ -26,10 +27,10 @@ lint:
     - prettier
   enabled:
     - actionlint@1.7.7
-    - biome@2.3.15
-    - checkov@3.2.501
+    - biome@2.5.1
+    - checkov@3.3.2
     - circleci@0.1.32638
-    - djlint@1.36.4
+    - djlint@1.39.4
     - dotenv-linter@3.3.0
     - dustilock@1.2.0
     - git-diff-check
@@ -37,19 +38,18 @@ lint:
     - hadolint@2.12.1-beta
     - kube-linter@0.7.2
     - markdown-link-check@3.14.2
-    - markdownlint-cli2@0.20.0
-    - markdownlint@0.47.0
+    - markdownlint-cli2@0.22.1
+    - markdownlint@0.49.0
     - nancy@1.0.48
     - osv-scanner@2.0.3
     - oxipng@9.1.5
     - pre-commit-hooks@5.0.0
-    - semgrep@1.151.0
+    - semgrep@1.168.0
     - shellcheck@0.10.0
     - shfmt@3.6.0
-    - stylelint@17.3.0
-    - svgo@4.0.0
+    - stylelint@17.14.0
+    - svgo@4.0.1
     - taplo@0.9.3
-    - trivy@0.63.0
     - trufflehog-git@3.89.2
     - trufflehog@3.89.2
     - yamllint@1.38.0
