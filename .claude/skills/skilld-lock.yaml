@@ -71,3 +71,10 @@ skills:
     source: "https://www.typescriptlang.org/**"
     syncedAt: 2026-06-26
     generator: skilld
+  types-node-skilld:
+    packageName: "@types/node"
+    version: 26.0.1
+    repo: DefinitelyTyped/DefinitelyTyped
+    source: readme
+    syncedAt: 2026-06-26
+    generator: skilld
