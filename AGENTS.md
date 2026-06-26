@@ -68,3 +68,18 @@ bun test
 2. **Type Definitions**: Some dependencies (`chalk-animation`, `update-notifier`) lack official types. Check `src/types/` before adding `@ts-ignore`.
 3. **Animations**: The code uses `process.stdout.write` with ANSI escape codes to overwrite lines for animations.
 4. **Environment**: `mise.toml` locks the Bun version.
+
+<!-- skilld -->
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+<!-- /skilld -->
+
+<!-- skilld -->
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+<!-- /skilld -->
+
+<!-- skilld -->
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+<!-- /skilld -->

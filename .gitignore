@@ -1,3 +1,12 @@
 node_modules/
 dist/
 **/*.log
+
+# Skilld references (recreated by `skilld install`)
+.skilld
+
+# Skilld references (recreated by `skilld install`)
+.skilld
+
+# Skilld references (recreated by `skilld install`)
+.skilld

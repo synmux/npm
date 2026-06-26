@@ -1,0 +1,73 @@
+skills:
+  cli-table3-skilld:
+    packageName: cli-table3
+    version: 0.6.5
+    packages: "cli-table3@0.6.5"
+    repo: cli-table/cli-table3
+    source: "ungh://cli-table/cli-table3"
+    syncedAt: 2026-06-26
+    generator: skilld
+  chalk-animation-skilld:
+    packageName: chalk-animation
+    version: 2.0.3
+    packages: "chalk-animation@2.0.3"
+    repo: bokub/chalk-animation
+    source: "ungh://bokub/chalk-animation"
+    syncedAt: 2026-06-26
+    generator: skilld
+  ora-skilld:
+    packageName: ora
+    version: 9.4.1
+    packages: "ora@9.4.1"
+    repo: sindresorhus/ora
+    source: "ungh://sindresorhus/ora"
+    syncedAt: 2026-06-26
+    generator: skilld
+  gradient-string-skilld:
+    packageName: gradient-string
+    version: 3.0.0
+    packages: "gradient-string@3.0.0"
+    repo: bokub/gradient-string
+    source: "ungh://bokub/gradient-string"
+    syncedAt: 2026-06-26
+    generator: skilld
+  chalk-skilld:
+    packageName: chalk
+    version: 5.6.2
+    packages: "chalk@5.6.2"
+    repo: chalk/chalk
+    source: "ungh://chalk/chalk"
+    syncedAt: 2026-06-26
+    generator: skilld
+  update-notifier-skilld:
+    packageName: update-notifier
+    version: 7.3.1
+    packages: "update-notifier@7.3.1"
+    repo: yeoman/update-notifier
+    source: "ungh://yeoman/update-notifier"
+    syncedAt: 2026-06-26
+    generator: skilld
+  biomejs-biome-skilld:
+    packageName: "@biomejs/biome"
+    version: 2.5.1
+    packages: "@biomejs/biome@2.5.1"
+    repo: biomejs/biome
+    source: "https://raw.githubusercontent.com/biomejs/biome/@biomejs/biome@2.5.1/packages/@biomejs/biome/README.md"
+    syncedAt: 2026-06-26
+    generator: skilld
+  types-bun-skilld:
+    packageName: "@types/bun"
+    version: 1.3.14
+    packages: "@types/bun@1.3.14"
+    repo: DefinitelyTyped/DefinitelyTyped
+    source: "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/docs"
+    syncedAt: 2026-06-26
+    generator: skilld
+  typescript-skilld:
+    packageName: typescript
+    version: 6.0.3
+    packages: "typescript@6.0.3"
+    repo: microsoft/TypeScript
+    source: "https://www.typescriptlang.org/**"
+    syncedAt: 2026-06-26
+    generator: skilld
