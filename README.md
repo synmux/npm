@@ -1,10 +1,10 @@
-# `dave.io`
+# `@synmux/npm`
 
 > Because every developer needs a metapackage that does almost nothing, but does it with style.
 
-Metapackage for Dave Williams.
+Metapackage for syn.
 
-It's a package. For Dave. By Dave. About Dave. If you were expecting more, well, that's on you.
+It's a package. For syn. By syn. About syn. If you were expecting more, well, that's on you.
 
 With thanks - and apologies - to [@zachleat](https://github.com/zachleat).
 
@@ -12,7 +12,7 @@ With thanks - and apologies - to [@zachleat](https://github.com/zachleat).
 
 ## Table of Contents
 
-- [`dave.io`](#daveio)
+- [`@synmux/npm`](#synmuxnpm)
   - [Table of Contents](#table-of-contents)
   - [Why?](#why)
   - [Usage](#usage)
@@ -35,7 +35,7 @@ With thanks - and apologies - to [@zachleat](https://github.com/zachleat).
 ### CLI
 
 ```sh
-npx dave.io
+npx @synmux/npm
 ```
 
 ### Programmatic
@@ -45,23 +45,23 @@ npx dave.io
 First, install the package:
 
 ```bash
-npm install dave.io
+npm install @synmux/npm
 ```
 
 Then you can pull it in to your heart's content:
 
 ```js
-import dave from "dave.io";
+import syn from "@synmux/npm";
 
-dave();
+syn();
 ```
 
 Or, if you're still clinging to CommonJS:
 
 ```js
-const { default: dave } = await import("dave.io");
+const { default: syn } = await import("@synmux/npm");
 
-dave();
+syn();
 ```
 
 ## Development
@@ -78,7 +78,7 @@ If you want to contribute, ask yourself: why?
 Believe it or not, features are planned!
 
 - `--cv` / `-c` parameter to dump out my CV.
-- Fetching links (and CV, when implemented) from [my personal API](https://github.com/daveio/syn-horse).
+- Fetching links (and CV, when implemented) from [my personal API](https://github.com/synmux/syn-horse).
   - There will always be a static fallback.
 - Literally anything useful.
 
