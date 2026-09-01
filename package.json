@@ -5,7 +5,7 @@
     "url": "https://syn.horse"
   },
   "bin": {
-    "synmux": "./dist/cmd.js"
+    "synmux": "dist/cmd.js"
   },
   "bugs": {
     "url": "https://github.com/synmux/npm/issues"
@@ -39,7 +39,7 @@
   "packageManager": "bun@1.4.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/synmux/npm.git"
+    "url": "git+https://github.com/synmux/npm.git"
   },
   "scripts": {
     "build": "bun run clean && bun build --target node --minify --sourcemap ./src/index.ts ./src/cmd.ts --outdir dist",
