@@ -42,7 +42,7 @@ export default async function (): Promise<void> {
   spinner.succeed()
 
   // Prepare version string with proper padding
-  const versionStr = `Dave Williams (v${pkg.version})`
+  const versionStr = `syn (v${pkg.version})`
 
   // Title with gradient
   console.log(
@@ -50,7 +50,7 @@ export default async function (): Promise<void> {
       `
           ╔═══════════════════════════════════════╗
           ║                                       ║
-          ║      ${versionStr.padEnd(33, ' ')}║
+          ║              ${versionStr.padEnd(25, ' ')}║
           ║                                       ║
           ╚═══════════════════════════════════════╝
     `
@@ -74,79 +74,58 @@ export default async function (): Promise<void> {
     {
       icon: '🦋',
       name: 'Bluesky',
-      url: 'https://dave.io/go/bluesky',
+      url: 'https://bsky.app/profile/syn.horse',
       color: chalk.yellow,
-      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://dave.io/go/bluesky')
-    },
-    {
-      icon: '📓',
-      name: 'Dreamwidth',
-      url: 'https://dave.io/go/dreamwidth',
-      color: chalk.green,
-      link: (text) => terminalLink(chalk.underline(chalk.green(text)), 'https://dave.io/go/dreamwidth')
+      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://bsky.app/profile/syn.horse')
     },
     {
       icon: '📘',
       name: 'Facebook',
-      url: 'https://dave.io/go/facebook',
+      url: 'https://facebook.com/synmux',
       color: chalk.blue,
-      link: (text) => terminalLink(chalk.underline(chalk.blue(text)), 'https://dave.io/go/facebook')
+      link: (text) => terminalLink(chalk.underline(chalk.blue(text)), 'https://facebook.com/synmux')
     },
     {
       icon: '🐙',
       name: 'GitHub',
-      url: 'https://dave.io/go/github',
+      url: 'https://github.com/synmux',
       color: chalk.magenta,
-      link: (text) => terminalLink(chalk.underline(chalk.magenta(text)), 'https://dave.io/go/github')
+      link: (text) => terminalLink(chalk.underline(chalk.magenta(text)), 'https://github.com/synmux')
     },
     {
       icon: '📷',
       name: 'Instagram',
-      url: 'https://dave.io/go/instagram',
+      url: 'https://instagram.com/synmux',
       color: chalk.red,
-      link: (text) => terminalLink(chalk.underline(chalk.red(text)), 'https://dave.io/go/instagram')
+      link: (text) => terminalLink(chalk.underline(chalk.red(text)), 'https://instagram.com/synmux')
     },
     {
       icon: '🔗',
       name: 'LinkedIn',
-      url: 'https://dave.io/go/linkedin',
+      url: 'https://linkedin.com/in/dcwilliams',
       color: chalk.yellow,
-      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://dave.io/go/linkedin')
+      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://linkedin.com/in/dcwilliams')
     },
     {
       icon: '🐘',
       name: 'Mastodon',
-      url: 'https://dave.io/go/mastodon',
+      url: 'https://basilisk.gallery/@syn',
       color: chalk.green,
-      link: (text) => terminalLink(chalk.underline(chalk.green(text)), 'https://dave.io/go/mastodon')
-    },
-    {
-      icon: '🔮',
-      name: 'Pillowfort',
-      url: 'https://dave.io/go/pillowfort',
-      color: chalk.blue,
-      link: (text) => terminalLink(chalk.underline(chalk.blue(text)), 'https://dave.io/go/pillowfort')
+      link: (text) => terminalLink(chalk.underline(chalk.green(text)), 'https://basilisk.gallery/@syn')
     },
     {
       icon: '🧵',
       name: 'Threads',
-      url: 'https://dave.io/go/threads',
+      url: 'https://threads.com/@synmux',
       color: chalk.magenta,
-      link: (text) => terminalLink(chalk.underline(chalk.magenta(text)), 'https://dave.io/go/threads')
-    },
-    {
-      icon: '📱',
-      name: 'Tumblr',
-      url: 'https://dave.io/go/tumblr',
-      color: chalk.red,
-      link: (text) => terminalLink(chalk.underline(chalk.red(text)), 'https://dave.io/go/tumblr')
+      link: (text) => terminalLink(chalk.underline(chalk.magenta(text)), 'https://threads.com/@synmux')
     },
     {
       icon: '🎥',
       name: 'YouTube',
-      url: 'https://dave.io/go/youtube',
+      url: 'https://youtube.com/@synmux',
       color: chalk.yellow,
-      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://dave.io/go/youtube')
+      link: (text) => terminalLink(chalk.underline(chalk.yellow(text)), 'https://youtube.com/@synmux')
     },
     {
       icon: '☠️',
@@ -187,27 +166,18 @@ export default async function (): Promise<void> {
 
   // Add content to table
   table.push(
-    [chalk.greenBright('🌐 Web'), terminalLink(chalk.underline(chalk.white('https://dave.io')), 'https://dave.io')],
+    [chalk.greenBright('🌐 Web'), terminalLink(chalk.underline(chalk.white('https://syn.horse')), 'https://syn.horse')],
     [],
-    [chalk.blue('⚧  Pronouns'), terminalLink(chalk.underline(chalk.white('they/them')), 'https://dave.io/gender')],
+    [chalk.blue('⚧  Pronouns'), chalk.white('they/them')],
     [],
     ...links.map((link) => [link.color(`${link.icon} ${link.name}`), link.link(link.url)]),
     [],
     [
       chalk.greenBright('💼 Check out my CV'),
-      terminalLink(chalk.underline(chalk.white('https://dave.io/go/cv')), 'https://dave.io/go/cv')
-    ],
-    [
-      chalk.greenBright('🧩 Give me a TODO'),
-      terminalLink(chalk.underline(chalk.white('https://dave.io/go/todo')), 'https://dave.io/go/todo')
-    ],
-    [
-      chalk.greenBright('🎤 Enjoy this talk'),
-      terminalLink(chalk.underline(chalk.white('https://dave.io/go/wat')), 'https://dave.io/go/wat')
-    ],
-    [
-      chalk.greenBright('🦜 Read this story'),
-      terminalLink(chalk.underline(chalk.white('https://dave.io/go/blit')), 'https://dave.io/go/blit')
+      terminalLink(
+        chalk.underline(chalk.white('https://public.syn.horse/files/cv.pdf')),
+        'https://public.syn.horse/files/cv.pdf'
+      )
     ]
   )
 

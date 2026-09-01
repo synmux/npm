@@ -37,8 +37,7 @@ jobs:
         run: bun x npm publish --provenance --access public
       - name: configure-ghpr
         run: |
-          echo "@daveio:registry=https://npm.pkg.github.com" > .npmrc
+          echo "@synmux:registry=https://npm.pkg.github.com" > .npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          bun x json -I -f package.json -e "this.name='@daveio/npm'"
       - name: publish-ghpr
-        run: bun x npm publish --provenance --access public --scope @daveio
+        run: bun x npm publish --provenance --access public --scope @synmux

@@ -1,5 +1,5 @@
 [env]
-DAVE_NPM_MISE_ACTIVE = 'true'
+SYN_NPM_MISE_ACTIVE = 'true'
 
 [settings]
 env_file = '.env'

@@ -21,7 +21,7 @@ describe('main export', () => {
 
     // Check that some essential content is logged
     const allOutput = consoleLogOutput.join('\n')
-    expect(allOutput).toContain('https://dave.io') //·Main·website
-    expect(allOutput).toContain('https://dave.io/go/') // At least one social link
+    expect(allOutput).toContain('https://syn.horse') //·Main·website
+    expect(allOutput).toContain('https://github.com/synmux') // At least one social link
   })
 })

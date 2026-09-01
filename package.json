@@ -1,14 +1,14 @@
 {
   "author": {
-    "email": "dave@dave.io",
-    "name": "Dave Williams",
-    "url": "https://dave.io"
+    "email": "so9js0owd@mozmail.com",
+    "name": "syn",
+    "url": "https://syn.horse"
   },
   "bin": {
-    "dave.io": "./dist/cmd.js"
+    "syn.horse": "./dist/cmd.js"
   },
   "bugs": {
-    "url": "https://github.com/daveio/npm/issues"
+    "url": "https://github.com/synmux/npm/issues"
   },
   "dependencies": {
     "chalk": "^6.0.0",
@@ -18,40 +18,40 @@
     "ora": "^9.4.1",
     "update-notifier": "^7.3.1"
   },
-  "description": "Meta package for Dave Williams",
+  "description": "Meta package for syn",
   "devDependencies": {
     "@biomejs/biome": "^2.5.11",
     "@types/bun": "^1.4.0",
-    "@types/node": "^26.4.0",
+    "@types/node": "^26.4.1",
     "skilld": "^2.3.0",
     "typescript": "^7.0.2"
   },
   "engines": {
-    "bun": "^1.3.11"
+    "bun": "^1.4.0"
   },
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/daveio/npm#readme",
+  "homepage": "https://github.com/synmux/npm#readme",
   "license": "MIT",
   "main": "./dist/index.js",
-  "name": "dave.io",
-  "packageManager": "bun@1.3.11",
+  "name": "@synmux/npm",
+  "packageManager": "bun@1.4.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/daveio/npm.git"
+    "url": "https://github.com/synmux/npm.git"
   },
   "scripts": {
     "build": "bun run clean && bun build --target node --minify --sourcemap ./src/index.ts ./src/cmd.ts --outdir dist",
     "clean": "rm -rf dist",
     "docker": "bun run docker:build && bun run docker:run",
-    "docker:build": "docker build -t dave-io:latest -f Dockerfile .",
-    "docker:run": "docker run -it --rm dave-io:latest",
+    "docker:build": "docker build -t syn-horse:latest -f Dockerfile .",
+    "docker:run": "docker run -it --rm syn-horse:latest",
     "lint": "bun x @biomejs/biome check .",
     "lint:fix": "bun x @biomejs/biome check --write .",
     "prepublishOnly": "bun run lint:fix && bun run test && bun run build",
     "start": "bun src/cmd.ts",
-    "tape": "vhs npm.tape && gif2webp -mixed -sharp_yuv -m 6 -min_size -mt -v assets/npm.gif -o assets/npm.webp && rm assets/npm.gif",
+    "gif": "vhs npm.tape && gif2webp -m 6 -min_size -mt -v assets/npm.gif -o assets/npm.webp && rm assets/npm.gif",
     "test": "bun test",
     "prepare": "skilld prepare || true"
   },
@@ -63,5 +63,5 @@
     "sharp"
   ],
   "type": "module",
-  "version": "1.0.6"
+  "version": "1.0.7"
 }

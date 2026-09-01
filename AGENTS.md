@@ -1,6 +1,6 @@
-# Agent Guide for dave.io/npm
+# Agent Guide for @synmux/npm
 
-This repository contains the source code for the `dave.io` npm package, a CLI-based "business card" for Dave Williams.
+This repository contains the source code for the `@synmux/npm` npm package, a CLI-based "business card" for syn.
 
 ## ⚡️ Quick Start
 
@@ -38,7 +38,7 @@ bun test
 | `bun run lint`     | Check code style with Biome                          |
 | `bun run lint:fix` | Auto-fix code style issues                           |
 | `bun run docker`   | Build and run the Docker container                   |
-| `bun run tape`     | Record terminal demo (requires `vhs` and `gif2webp`) |
+| `bun run gif`      | Record terminal demo (requires `vhs` and `gif2webp`) |
 
 ## 🏗 Architecture & Patterns
 
@@ -68,16 +68,6 @@ bun test
 2. **Type Definitions**: Some dependencies (`chalk-animation`, `update-notifier`) lack official types. Check `src/types/` before adding `@ts-ignore`.
 3. **Animations**: The code uses `process.stdout.write` with ANSI escape codes to overwrite lines for animations.
 4. **Environment**: `mise.toml` locks the Bun version.
-
-<!-- skilld -->
-Before modifying code, evaluate each installed skill against the current task.
-For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
-<!-- /skilld -->
-
-<!-- skilld -->
-Before modifying code, evaluate each installed skill against the current task.
-For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
-<!-- /skilld -->
 
 <!-- skilld -->
 Before modifying code, evaluate each installed skill against the current task.
