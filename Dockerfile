@@ -44,7 +44,7 @@ COPY --chown=syn-horse:syn-horse . .
 RUN bun run build
 
 # Add a healthcheck to ensure the application is working
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 CMD ["bun", "dist/cmd.js"]
+HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=3 CMD ["bun", "dist/cmd.js"]
 
 # Set the default command to run the CLI
 CMD ["bun", "dist/cmd.js"]
