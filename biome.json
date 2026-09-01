@@ -1,10 +1,44 @@
 {
-  "$schema": ".trunk/configs/biome_schema.json",
-  "extends": [".trunk/configs/biome.json"],
+  "root": true,
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["!**/.trunk", "!**/.history", "!**/dist"]
+    "includes": ["**", "!.trunk/"]
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "formatter": {
+    "attributePosition": "auto",
+    "bracketSpacing": true,
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 120,
+    "useEditorconfig": true
+  },
+  "graphql": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded",
+      "trailingCommas": "none"
+    }
+  },
+  "json": {
+    "parser": {
+      "allowComments": false,
+      "allowTrailingCommas": false
+    }
   },
   "linter": {
+    "enabled": true,
     "rules": {
       "style": {
         "noParameterAssign": "error",
@@ -19,5 +53,11 @@
         "noUselessElse": "error"
       }
     }
+  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
   }
 }

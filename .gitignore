@@ -5,8 +5,5 @@ dist/
 # Skilld references (recreated by `skilld install`)
 .skilld
 
-# Skilld references (recreated by `skilld install`)
-.skilld
-
-# Skilld references (recreated by `skilld install`)
-.skilld
+# Serena code-intelligence cache (created on project activation)
+.serena/
