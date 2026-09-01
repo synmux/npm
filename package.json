@@ -5,7 +5,7 @@
     "url": "https://syn.horse"
   },
   "bin": {
-    "syn.horse": "./dist/cmd.js"
+    "synmux": "./dist/cmd.js"
   },
   "bugs": {
     "url": "https://github.com/synmux/npm/issues"
