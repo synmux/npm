@@ -31,7 +31,7 @@ lint:
     - actionlint@1.7.12
     - biome@2.5.13
     - checkov@3.3.17
-    - circleci@1.0.50068
+    - circleci@1.0.50365
     - djlint@1.46.1
     - dotenv-linter@4.0.0
     - dustilock@1.2.0
@@ -43,7 +43,7 @@ lint:
     - markdownlint-cli2@0.23.2
     - markdownlint@0.49.1
     - nancy@2.1.0
-    - osv-scanner@2.5.1
+    - osv-scanner@2.6.0
     - oxipng@10.2.1
     - pre-commit-hooks@5.0.0
     - semgrep@1.177.0
