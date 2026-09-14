@@ -16,13 +16,20 @@ out
 # Environment
 .env
 .env.*
+mise.toml
 
-# IDE and editor files
+# IDE, editor and agent files
 .idea
 .vscode
 *.sublime-*
 *.swp
 *~
+.claude
+.gemini
+.serena
+.skilld
+.editorconfig
+.pinact.yaml
 
 # Testing
 tests
@@ -30,6 +37,7 @@ coverage
 .nyc_output
 **/*.test.*
 **/*.spec.*
+vitest.config.ts
 
 # Logs and debugging
 **/*.log
@@ -43,10 +51,12 @@ Dockerfile
 docker-compose*
 .dockerignore
 
-# Documentation
+# Documentation and demo assets
 README.md
 *.md
 docs
+assets
+*.tape
 
 # Misc
 .DS_Store

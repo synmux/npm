@@ -1,50 +1,40 @@
 # syntax=docker/dockerfile:1
 
-# Use a minimal base image
-FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b AS base
+# Node 24 on Alpine, pinned by digest. Dependabot keeps the pin fresh.
+FROM node:24.20.0-alpine3.24@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS base
 
-# Install dependencies for bun (with version pinning)
-RUN apk update \
-    && apk add --no-cache \
-    bash=5.3.9-r1 \
-    ca-certificates=20260611-r0 \
-    curl=8.21.0-r0 \
-    libstdc++=15.2.0-r5 \
-    libgcc=15.2.0-r5
-
-# Set shell with pipefail for better error handling
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Set working directory
+# pnpm comes from Corepack, which reads the pinned version (and its integrity
+# hash) from the `packageManager` field in package.json.
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    PNPM_HOME=/pnpm \
+    PATH=/pnpm:$PATH
+RUN corepack enable pnpm
 WORKDIR /app
 
-# Create and use a non-root user (Alpine style)
-RUN mkdir -p /app && \
-    adduser -D -u 1337 -h /app syn-horse && \
-    chown -R syn-horse /app
+# Install every dependency and build dist/.
+FROM base AS build
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --ignore-scripts
+COPY . .
+RUN pnpm run build
 
-# Switch to non-root user for security
+# Install only the runtime dependencies.
+FROM base AS prod-deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --prod --frozen-lockfile --ignore-scripts
+
+# Final image: the built CLI and its runtime dependencies, run as a non-root user.
+FROM base AS runtime
+RUN adduser -D -u 1337 -h /app syn-horse && chown -R syn-horse:syn-horse /app
+COPY --chown=syn-horse:syn-horse package.json ./
+COPY --from=prod-deps --chown=syn-horse:syn-horse /app/node_modules ./node_modules
+COPY --from=build --chown=syn-horse:syn-horse /app/dist ./dist
 USER 1337
-WORKDIR /app
-
-# Install bun (JavaScript runtime)
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/app/.bun/bin:$PATH"
-
-# Copy package files first to leverage caching
-COPY --chown=syn-horse:syn-horse package.json bun.lock ./
-
-# Install dependencies using bun
-RUN bun install
-
-# Copy the rest of the project files
-COPY --chown=syn-horse:syn-horse . .
-
-# Build the project
-RUN bun run build
 
 # Add a healthcheck to ensure the application is working
-HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=3 CMD ["bun", "dist/cmd.js"]
+HEALTHCHECK --interval=60s --timeout=10s --start-period=20s --retries=3 CMD ["node", "dist/cmd.js"]
 
 # Set the default command to run the CLI
-CMD ["bun", "dist/cmd.js"]
+CMD ["node", "dist/cmd.js"]
