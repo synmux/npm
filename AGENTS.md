@@ -4,41 +4,51 @@ This repository contains the source code for the `@synmux/npm` npm package, a CL
 
 ## ⚡️ Quick Start
 
-This project uses **Bun** for package management, script execution, and testing.
+This project runs on **Node 24** and uses **pnpm** for package management and script execution. `mise.toml` pins Node
+and the `packageManager` field in `package.json` pins pnpm (Corepack honours it).
 
 ```bash
 # Install dependencies
-bun install
+pnpm install
 
-# Run the CLI locally
-bun run start
+# Run the CLI locally (Node strips the types natively; nothing is compiled)
+pnpm start
 
 # Run tests
-bun test
+pnpm test
 ```
 
 ## 🛠 Project Structure
 
-- **Runtime**: Bun (check `bun.lock`)
-- **Language**: TypeScript
+- **Runtime**: Node 24 (`mise.toml`, `engines.node`)
+- **Package manager**: pnpm (`pnpm-lock.yaml`, `pnpm-workspace.yaml` for install policy)
+- **Language**: TypeScript, type-checked by `tsc` (`tsconfig.json`), never emitted for development
 - **Linter/Formatter**: Biome (`biome.json`)
+- **Bundler**: esbuild, with a declaration-only `tsc -p tsconfig.build.json` pass for `dist/index.d.ts`
+- **Test runner**: vitest (`vitest.config.ts`)
 - **Entry Points**:
   - `src/index.ts`: Core logic (exports default async function).
   - `src/cmd.ts`: CLI executable wrapper (calls `index.ts`).
-- **Tests**: `src/index.test.ts` (uses `bun:test`).
+- **Tests**: `src/index.test.ts`.
 - **Types**: `src/types/` contains declarations for untyped dependencies.
+- **Build output**: `dist/` (gitignored; `cmd.js`, `index.js`, a shared chunk and `index.d.ts`)
 
 ## 🤖 Common Commands
 
-| Command            | Description                                          |
-| ------------------ | ---------------------------------------------------- |
-| `bun run start`    | Run the CLI tool locally                             |
-| `bun run build`    | Build for Node.js target (outputs to `dist/`)        |
-| `bun run test`     | Run unit tests                                       |
-| `bun run lint`     | Check code style with Biome                          |
-| `bun run lint:fix` | Auto-fix code style issues                           |
-| `bun run docker`   | Build and run the Docker container                   |
-| `bun run gif`      | Record terminal demo (requires `vhs` and `gif2webp`) |
+| Command               | Description                                                    |
+| --------------------- | -------------------------------------------------------------- |
+| `pnpm start`          | Run the CLI tool locally from source                           |
+| `pnpm run build`      | Bundle with esbuild and emit declarations (outputs to `dist/`) |
+| `pnpm test`           | Run unit tests once                                            |
+| `pnpm run test:watch` | Run unit tests in watch mode                                   |
+| `pnpm run lint`       | Check code style with Biome                                    |
+| `pnpm run lint:fix`   | Auto-fix code style issues                                     |
+| `pnpm run lint:types` | Type-check with `tsc --noEmit`                                 |
+| `pnpm run docker`     | Build and run the Docker container                             |
+| `pnpm run gif`        | Record terminal demo (requires `vhs` and `gif2webp`)           |
+
+CI (`.github/workflows/ci.yml`) runs Trunk, then `lint`, `lint:types`, `build` and `test`. `publish.yml` re-runs CI
+against a version tag and publishes with npm trusted publishing (OIDC); `prepublishOnly` runs the same gate locally.
 
 ## 🏗 Architecture & Patterns
 
@@ -52,22 +62,32 @@ bun test
 ### Code Style
 
 - **Formatting**: Strict adherence to Biome rules.
-- **Imports**: ES Modules (`import`/`export`).
+- **Imports**: ES Modules (`import`/`export`). Relative imports keep their `.ts` extension so Node can run the sources
+  directly.
 - **Async/Await**: Used heavily for animations (e.g., `sleep` helper).
 - **Type Safety**: TypeScript used throughout. `src/types/` covers missing `@types/*` packages.
 
 ## 🧪 Testing
 
-- **Runner**: Native `bun:test`.
-- **Mocking**: `spyOn(console, 'log')` is used to capture and verify CLI output.
+- **Runner**: vitest, configured in `vitest.config.ts` with a 15 second timeout because the CLI animates for four
+  seconds before printing.
+- **Mocking**: `vi.spyOn(console, 'log')` is used to capture and verify CLI output; mocks are restored after each
+  test.
 - **Pattern**: Tests run against the exported function from `src/index.ts`, not the CLI wrapper.
 
 ## ⚠️ Gotchas & Notes
 
-1. **Node.js Compatibility**: While developed with Bun, the build targets Node.js (`--target node`) for wider distribution via npm.
-2. **Type Definitions**: Some dependencies (`chalk-animation`, `update-notifier`) lack official types. Check `src/types/` before adding `@ts-ignore`.
-3. **Animations**: The code uses `process.stdout.write` with ANSI escape codes to overwrite lines for animations.
-4. **Environment**: `mise.toml` locks the Bun version.
+1. **Node type stripping**: `pnpm start` runs `node src/cmd.ts`. Only erasable TypeScript syntax is allowed
+   (`erasableSyntaxOnly` in `tsconfig.json`), and relative imports must include the `.ts` extension.
+2. **Bundling**: esbuild marks packages external (`dependencies` are installed by npm) and inlines `package.json`. The
+   two entry points share a chunk via `--splitting`.
+3. **Type Definitions**: Some dependencies (`chalk-animation`, `update-notifier`) lack official types. Check `src/types/`
+   before adding `@ts-expect-error`.
+4. **Animations**: The code uses `process.stdout.write` with ANSI escape codes to overwrite lines for animations.
+5. **pnpm install policy**: `pnpm-workspace.yaml` enforces a one-week `minimumReleaseAge`, so `pnpm add` can pick a
+   version behind npm's latest. `allowBuilds` lists the packages whose install scripts may run.
+6. **Docker**: The multi-stage `Dockerfile` installs pnpm via Corepack, builds in one stage and ships only `dist/` plus
+   production dependencies.
 
 <!-- skilld -->
 Before modifying code, evaluate each installed skill against the current task.

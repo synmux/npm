@@ -38,6 +38,8 @@ With thanks - and apologies - to [@zachleat](https://github.com/zachleat).
 npx @synmux/npm
 ```
 
+Needs Node 24 or newer. Bun is no longer required, or indeed involved.
+
 ### Programmatic
 
 > For those who want to automate their disappointment.
@@ -67,7 +69,8 @@ syn();
 ## Development
 
 - Written in **TypeScript**, because more code is more better.
-- Built and tested (no, really) with `bun`, because  `npm` and `yarn` don't break enough.
+- Runs on **Node 24** with `pnpm`, because `bun` broke enough.
+- Bundled with `esbuild` and tested (no, really) with `vitest`.
 - Linted with `biome`, because someone has to care about code style.
 - **For detailed codebase documentation, see [AGENTS.md](AGENTS.md)**.
 
@@ -89,7 +92,10 @@ Believe it or not, features are planned!
 - `1.0.3` _yanked_
 - `1.0.4` _yanked_
 - `1.0.5` _yanked_
-- `1.0.6` **(current)** Add pronouns to the output and update Docker pins.
+- `1.0.6` Add pronouns to the output and update Docker pins.
+- `1.0.7` Rebrand from `dave.io` to `@synmux/npm`; the binary is now `synmux`.
+- `1.0.8` **(current)** Tidy `package.json` metadata and move CI to Node 24.
+- _Unreleased_ Drop Bun for Node 24, pnpm, vitest and esbuild. Node 24 is now required.
 
 ## License
 
