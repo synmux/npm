@@ -1,0 +1,526 @@
+─── package.json:59-59 ───
+[maintainability · low] The `gif` script depends on the external binaries `vhs` (charmbracelet/vhs,
+a Go tool) and `gif2webp` (part of the WebP toolkit), but neither is declared in devDependencies nor
+otherwise documented. On a fresh install, running `pnpm gif` will fail with 'command not found'.
+Since these tools are not npm packages (so they can't be added to devDependencies directly),
+consider documenting the required system dependencies (e.g., in the README / a `README` section or a
+`requiredExternalTools` note) so contributors know they must be installed separately.
+
+
+
+─── package.json:63-63 ───
+[maintainability · medium] The `|| true` at the end of the `prepare` script silently swallows any
+failure from `skilld prepare`. Because `prepare` runs on every install (npm/pnpm run lifecycle
+scripts during install), a genuine generation/installation error would be hidden, and consumers
+would get a partially prepared package without any indication. If failures are expected/accepted,
+keep `|| true` but log the failure explicitly (e.g., `pnpm exec skilld prepare || echo 'warning:
+skilld prepare failed';`); if not, drop the `|| true` so breaking errors surface at install time.
+
+
+
+─── mise.toml:5-5 ───
+[bug · low] The referenced `.env` file does not appear to exist in the repository. Depending on the
+mise version, a missing `env_file` either errors out on activation or is silently ignored. If the
+file is only ever intended to exist locally (e.g., gitignored), this is fine, but verify that mise
+does not hard-fail when it is absent so the environment doesn't break for contributors. Consider
+documenting/generating a `.env.example` if the file is meant to be present.
+
+
+
+─── mise.toml:8-8 ───
+[maintainability · low] The exact Node version is pinned, which is good for reproducibility.
+However, since Node 24 is an LTS line with frequent patch releases, a hard-coded patch `24.20.0`
+guarantees the environment only stays reproducible as long as that exact build is still available in
+the configured mise (or version-files) sources. Confirm `24.20.0` is a valid published release and
+available in your sources; otherwise resolve the version to ensure a consistent, installable
+toolchain.
+
+
+
+─── src/cmd.ts:11-11 ───
+[maintainability · medium] Dead code: this `export default {}` empty object is unused in a CLI
+entry-point script. It appears to be leftover scaffolding and adds confusion about what the module
+exports. Remove it.
+
+
+
+─── src/cmd.ts:6-9 ───
+[bug · medium] Promise rejections can carry any value (a string, number, etc.), not just `Error`.
+Typing the catch parameter as `Error` is an incorrect assumption — if `index()` rejects with a
+non-Error value, TypeScript's narrowing is violated at runtime and any `error.message` access would
+break. Prefer an async wrapper with try/catch and type the caught value as `unknown`: `(async () =>
+{ try { await index() } catch (error: unknown) { console.error('An error occurred:', error);
+process.exit(1) } })()`. This also aligns better with the async/await preference in the review
+checklist.
+
+
+
+─── src/cmd.ts:3-3 ───
+[bug · low] Importing with an explicit `.ts` extension requires Node's type-stripping
+(22.6+/experimental) or an external loader/transform step. In standard Node.js environments this
+import will either fail to resolve or be rejected (ERR_UNKNOWN_FILE_EXTENSION). Ensure the
+runtime/build pipeline (e.g., tsx, ts-node, or a bundler) supports extensionless or `./index.ts`
+resolution, or configure it accordingly.
+
+
+
+─── src/types/chalk.d.ts:2-2 ───
+[maintainability · low] Duplicate type alias `ChalkFunction` is declared both at the module top
+level (line 2) and again inside the `namespace chalk` (line 15). The two declarations are redundant
+and can cause confusion about which one is canonical. Remove the top-level alias and keep only the
+namespace-local one (or vice versa).
+
+
+
+─── src/types/chalk.d.ts:2-2 ───
+[bug · medium] The return type `string & ChalkInstance` is an intersection of `string` and
+`ChalkInstance`. In actual chalk usage, calling e.g. `chalk.red('x')` returns a string with
+chainable methods at runtime; the intersection is workable but unintuitive. More importantly,
+`ChalkInstance` itself already declares a call signature `(text: string): string`, making the
+`string & ChalkInstance` return type awkward to consume (callers get both a `string` and a
+function-like object). Consider simplifying the model so method returns are just `ChalkInstance`,
+which better matches chainable call behavior.
+
+
+
+─── src/types/chalk.d.ts:26-26 ───
+[maintainability · medium] This declaration only covers a small subset of chalk's API (colors + a
+few styles). Common methods such as bg* background colors, `hex()`, `rgb()`, `hsl()`, `keyword()`,
+`bold`/`underline` variants for background, `supportsColor`, and `level` are missing. If this is
+intended as a full declaration, consumers will get type errors when using these widely used
+features. Either complete the declaration or document that only a subset is supported.
+
+
+
+─── src/types/chalk.d.ts:32-33 ───
+[maintainability · medium] Only a default export is provided, but chalk (v4/v5) also exposes named
+exports such as `chalk.red`, `chalk.bgRed`, `chalk.hex`, etc. (named color functions and the
+`supportsColor` export). Consumers that import these named members will fail to type-check. Consider
+adding the relevant named exports or documenting that only `export default` is supported.
+
+
+
+─── src/types/cli-table3.d.ts:34-34 ───
+[bug · high] The `push` signature only accepts rows of primitive scalar values and rejects object
+cells, which cli-table3 fully supports (e.g. `{ content: 'text', colSpan: 2, rowSpan: 1 }`, `{
+hAlign: 'center' }`). Valid library usage will fail to compile against this declaration. Recommend
+including a `Cell`/`Table.CellOptions` union type in the row element type, e.g. `push(...rows: (Cell
+| string | number | boolean | null | undefined)[][])`. Also note that the rest-parameter form should
+be `...(rows: CellRow[])` (each argument is a row array), which is what the current signature
+already expresses.
+
+
+
+─── src/types/cli-table3.d.ts:5-5 ───
+[bug · medium] `colAligns` is typed as `string[]`, which is too permissive and defeats compile-time
+checking of invalid alignment values. cli-table3 only supports `'left' | 'center' | 'right'`. Use
+`colAligns?: Array<'left' | 'center' | 'right'>` so typos are caught at compile time.
+
+
+
+─── src/types/cli-table3.d.ts:29-29 ───
+[maintainability · medium] This broad index signature makes every unknown/top-level option valid, so
+typo'd or unsupported option keys silently compile. It also weakens the value of having the explicit
+`head`/`colWidths`/`colAligns` properties, since the `object` member of the index union permits
+essentially arbitrary shapes. Consider narrowing the index value union (e.g. dropping `object`) or
+removing the index signature and declaring only the options cli-table3 actually supports (note
+`head` cells may also be objects, not just `string[]`).
+
+
+
+─── src/types/cli-table3.d.ts:6-10 ───
+[maintainability · low] The `style` index signature `[key: string]: ...` combined with `head?:
+string[]`/`border?: string[]` already covers arbitrary style keys, which makes the explicit
+`head`/`border` members redundant and allows unbounded style keys. Also, cli-table3
+`style.head`/`style.border` are arrays of ANSI colors, but `style.padding-left` is a number; the
+union type covers this. This is acceptable but be aware the index signature permits any custom key
+to pass silently.
+
+
+
+─── src/types/chalk-animation.d.ts:4-4 ───
+[bug · medium] Return type inaccuracy: in chalk-animation v2 the animation's `stop()` returns a
+Promise (it resolves after the animation has actually been torn down). Declaring it as `void` masks
+async shutdown semantics and would prevent consumers from `await`ing a graceful stop. Recommend
+`stop(): Promise<void>`.
+
+
+
+─── src/types/chalk-animation.d.ts:5-5 ───
+[bug · medium] Incomplete API surface: the animation instance actually exposes a `frame()` method
+(renders a single frame without starting the loop) in addition to start/stop/replace/render. Adding
+`frame(): void` here improves type coverage and matches the runtime API so consumers can call it
+without TS errors.
+
+
+
+─── src/index.ts:33-33 ───
+[bug · medium] The exported async function has no try/catch and no finally to stop the spinner. If
+any dependency throws (e.g. chalkAnimation, ora, or an unexpected error in the table/render code),
+the spinner that was started via ``spinner.start()`` will never be stopped (left spinning on the
+terminal), and the rejected promise becomes an unhandled rejection that may crash the process. Wrap
+the body in try/catch/finally so ``spinner.succeed()``/``spinner.fail()`` and any cleanup always
+run, e.g.:
+
+```ts
+export default async function (): Promise<void> {
+  const spinner = ora({...}).start()
+  try {
+    // all work
+  } catch (err) {
+    spinner.fail(String(err))
+    throw err
+  } finally {
+    // cleanup
+  }
+}
+```
+
+
+
+─── src/index.ts:11-14 ───
+[maintainability · medium] Module-level side effect: ``updateNotifier({ pkg })`` is invoked at
+import time, which spawns a background network check against the npm registry on every module load.
+This couples an asynchronous/dependency side effect with module evaluation: importing this module
+for testing, tooling (e.g. bundlers, type-checking, test runners), or non-CLI embedding will trigger
+network requests and potentially print output. The update check should be moved inside the exported
+async function (or a dedicated opt-in ``--check-update`` path) instead of running as a top-level
+import side effect.
+
+
+
+─── src/index.ts:68-69 ───
+[bug · low] The cursor-up count is derived from ``introText.split('\n').length`` which returns 3
+(the leading/trailing ``\n`` plus the text segment), while the original rainbow text is written by
+chalkAnimation and the replacement is printed with an implicit trailing newline from
+``console.log``. This count is fragile: (1) if the long animation line wraps on a narrow terminal,
+each written/terminal-wrapped line consumes more rows than counted, so the ``A`` move will land in
+the wrong row and the ``[0J`` may clear or misplace output; (2) if chalkAnimation emits extra
+blank/padding lines after ``stop()``, the assumed cursor position is off. Recommend
+capturing/documenting the exact number of rows written (or recomputing the real column-aware height)
+rather than inferring from an approximate split count.
+
+
+
+─── src/index.ts:131-135 ───
+[maintainability · low] This entry is placed in the ``links`` array and rendered like the other
+social links, but ``url`` is a sentence, not a URL, and it is wrapped in a double ``chalk.dim`` (the
+row already colors the ``icon + name`` with ``link.color`` = ``chalk.dim``, then ``link.link(url)``
+applies ``chalk.dim`` again). Because it renders identically to the real (OSC-8 clickable) links, a
+user may expect it to be clickable. Consider moving this out of the generic links list into a
+separate message row, dropping the redundant nested ``chalk.dim``, and visually distinguishing it as
+plain text (e.g. a leading '✖' or comment).
+
+
+
+─── .trunk/trunk.yaml:43-44 ───
+[maintainability · medium] Both `markdownlint` (v0.49.1) and `markdownlint-cli2` (v0.23.2) are
+enabled. markdownlint-cli2 is the actively maintained, next-generation CLI for the same underlying
+markdownlint core, so running both produces duplicated checks and redundant CI/hook work. Recommend
+enabling only markdownlint-cli2 and removing the legacy `markdownlint` entry.
+
+
+
+─── .trunk/trunk.yaml:39-39 ───
+[performance · medium] Multiple secret scanners are enabled simultaneously: gitleaks (line 39),
+grype, trufflehog, and trufflehog-git (lines 55-56). Running several secret scanners in parallel
+causes redundant scanning of the full history, longer pre-push/CI times, and potentially
+conflicting/duplicate findings that dilute signal. Review whether gitleaks + trufflehog alone are
+sufficient and drop the extra redundant scanners.
+
+
+
+─── .trunk/trunk.yaml:13-13 ───
+[maintainability · medium] python@3.14.4 is an extremely new runtime (3.14.x). Not all enabled
+linters run with a runtime shim guarantee compatibility with such a recent Python (some tools pin
+supported Python versions and can fail or silently misbehave). Consider pinning to a stable,
+widely-supported version such as python@3.12.x until all enabled tooling is verified against 3.14.
+
+
+
+─── .github/workflows/devskim.yaml:5-11 ───
+[security · high] Excessive permissions at the top level. This job only checks out the repo and
+uploads a SARIF file, so it only needs `contents: read` (for checkout) and `security-events: write`
+(for the CodeQL upload-sarif step). The `id-token: write`, `issues: write`, `pull-requests: write`,
+and `actions: read` grants are unnecessary and expand the blast radius if the workflow is ever
+compromised (e.g., a malicious PR on `pull_request_target`). Reduce to least privilege.
+
+Example:
+```yaml
+permissions:
+  contents: read
+  security-events: write
+```
+
+  permissions:
+-   actions: read
+    contents: read
+-   id-token: write
+-   issues: write
+-   pull-requests: write
+    security-events: write
+
+
+─── .github/workflows/devskim.yaml:12-15 ───
+[other · medium] The `devskim` job has no `timeout-minutes`. A hung DevSkim run (or a hung runner
+setup/action) would consume the runner indefinitely. Add an explicit timeout, e.g. `timeout-minutes:
+15`.
+
+- jobs:
+-   devskim:
+-     name: devskim
+      runs-on: ubuntu-latest
++     timeout-minutes: 15
+
+
+─── .github/workflows/devskim.yaml:2-4 ───
+[other · medium] No `concurrency` group is defined. Since this workflow triggers on both `push` and
+`pull_request`, overlapping runs on the same branch/PR can be scheduled redundantly and waste runner
+resources. Add a `concurrency` group with `cancel-in-progress` to supersede in-flight runs on the
+same ref, for example:
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+
+
+─── .github/workflows/docker.yaml:11-12 ───
+[other · medium] The `push` job has no `timeout-minutes`. A hanging build step (e.g., a flaky
+network call in the build or a stuck QEMU emulation step) could consume GitHub-hosted runner
+resources for up to the platform's hard cap. Add an explicit timeout (e.g., `timeout-minutes: 30`)
+so the job fails fast instead of running near-indefinitely.
+
+
+
+─── .github/workflows/docker.yaml:2-5 ───
+[other · medium] This workflow is triggered on every tag push but has no `concurrency` group.
+Multiple tag pushes (or a pushed tag followed by a corrected re-push) will launch redundant,
+parallel builds that each push `latest`/`<sha>` tags to the same GHCR repository, wasting resources
+and racing on mutable tags. Add a `concurrency` block (e.g., a group named `docker-${{ github.ref
+}}` with `cancel-in-progress: true`) so only the most recent push for a given tag runs.
+
+
+
+─── .github/workflows/docker.yaml:34-34 ───
+[maintainability · low] Every tag push (including arbitrary/test tags, since the trigger matches
+`tags: "*"`) overwrites the mutable `latest` tag. A non-release tag can clobber `latest` with a
+non-production image, and `latest` is an ambiguous reference for consumers. Consider tagging
+`latest` only for the default branch or for version tags (e.g.,
+`type=raw,value=latest,enable={{is_default_branch}}`), or relying on the immutable
+`{{version}}`/`{{sha}}` tags instead.
+
+
+
+─── .github/workflows/ci.yml:8-9 ───
+[other · medium] Several jobs across workflows lack a `timeout-minutes` setting, so a hung step
+could consume a runner indefinitely. Add `timeout-minutes` to the `lint` job in
+`.github/workflows/ci.yml`, the job in `.github/workflows/claude.yml`, the `claude-review` job in
+`.github/workflows/claude-code-review.yml`, and the `publish`, `verify-tag`, and `ci` jobs in
+`.github/workflows/publish.yml`. A reasonable value is 30 minutes (or lower for simpler jobs). In
+`claude.yml`, this is particularly important because the workflow is triggerable by external users
+who can occupy runners at will.
+
+    lint:
+      runs-on: ubuntu-latest
++     timeout-minutes: 30
+
+
+─── .github/workflows/ci.yml:3-5 ───
+[other · medium] Workflows lack a `concurrency` group, so rapid pushes/PR updates or multiple
+comments can spawn redundant overlapping runs that waste runner time and may race on artifacts. Add
+a `concurrency` group with `cancel-in-progress: true` to each workflow: key it by workflow/ref for
+push/PR triggers, by ref/issue for comment triggers, and by PR number for review triggers. For
+example: `concurrency: { group: ${{ github.workflow }}-${{ github.ref }}, cancel-in-progress: true
+}` for ci.yml, `group: ${{ github.workflow }}-${{ github.event.issue.number }}-${{
+github.event.comment.id }}` for comment-triggered runs, etc. This prevents resource waste and
+conflicting outputs.
+
+  on:
+    push: null
+    pull_request: null
++   workflow_call: null # publish.yml runs this before releasing to npm
++ concurrency:
++   group: ${{ github.workflow }}-${{ github.ref }}
++   cancel-in-progress: true
+
+
+─── .github/dependabot.yml:4-15 ───
+[bug · medium] Cooldown is configured (default-days: 7) in every ecosystem, but all dependencies are
+also collected into a single catch-all group (`all-dependencies` matching `*`). Per Dependabot's
+documentation, the cooldown feature does not apply to grouped updates — it only throttles
+single-dependency update PRs. Since every dependency matches this group, the cooldown setting will
+effectively never take effect. Decide which behavior you actually want: if cooldown throttling
+matters, do not group all dependencies; if grouping into one combined PR is the goal, remove the
+cooldown block to avoid a misleading/ineffective config.
+
+
+
+─── .github/dependabot.yml:9-9 ───
+[performance · low] open-pull-requests-limit: 100 is the maximum allowed value and, combined with a
+daily schedule, can generate a very large number of open PRs (100 per ecosystem × 3 ecosystems).
+Consider lowering this to a more reasonable value (e.g. 10-20) to reduce PR/build noise unless a
+large batch of updates is genuinely expected at once.
+
+
+
+─── .github/dependabot.yml:10-11 ───
+[maintainability · low] The assignee `synmux` must have write access to this repository for
+Dependabot to actually assign it to PRs; otherwise the `assignees` entry is silently ignored. Verify
+the user has the required permission, or the assignment won't happen.
+
+
+
+─── .github/workflows/claude.yml:23-26 ───
+[other · low] `contains(...)` is case-sensitive, so `@Claude`, `@CLAUDE`, etc. won't trigger the
+workflow while `@claude` will. If case-insensitive matching is intended, expand the checks to cover
+the common variants (e.g. also test `@Claude`/`@CLAUDE`) or note the limitation in the docs. Also
+consider whether a substring match is desired — the current check will also fire on words containing
+`@claude` inside larger text.
+
+
+
+─── .github/workflows/claude.yml:34-38 ───
+[security · high] Security consideration: on a public repository this workflow is triggerable by
+*any* external user simply by commenting `@claude` on any issue/PR, yet it consumes the
+`CLAUDE_CODE_OAUTH_TOKEN` (an authenticated OAuth token) and runs an agent that can execute tools.
+The `additional_permissions: actions: read` and read-only top-level permissions limit the blast
+radius of malicious prompts, but a malicious comment can still drive arbitrary Claude Code agent
+activity (network calls, reading repo/actions state) and consume the OAuth quota. Consider
+restricting triggers to trusted actors (e.g. `github.actor` allowlist, or only trigger on comments
+from members/collaborators) to reduce abuse surface, and verify `id-token: write` is actually
+required by the action since it widens the token scope globally.
+
+
+
+─── .github/workflows/publish.yml:72-74 ───
+[bug · high] The publish job never installs dependencies yet runs `npm publish`, which triggers
+`prepublishOnly` (`pnpm run-s lint lint:types test build`) on a fresh runner. Those scripts need
+dev/peer dependencies (node_modules) that are not present (pnpm/action-setup with `cache: true` only
+restores the store when an install step runs; it does not install anything by itself). `npm publish`
+will therefore fail. Add `pnpm install --frozen-lockfile` (or `npm ci`) after setup and before
+publish.
+
+
+
+─── .github/workflows/publish.yml:46-48 ───
+[security · low] `permissions: read-all` is broader than least privilege for a job that only
+orchestrates a reusable workflow. Note that if the called `ci.yml` declares `read-all`, this may be
+required for the call to succeed — but ideally the reusable workflow itself should be narrowed to
+only the read scopes it actually needs (`contents: read`), and this caller job should mirror that.
+
+
+
+─── .gitignore:3-3 ───
+[maintainability · low] Broad pattern that ignores every `.log` file at any depth, which can
+accidentally exclude diagnostic or audit logs that should be committed. Note that in gitignore
+semantics `*.log` already matches files in all directories, so the `**/` prefix is redundant. If
+only build/runtime logs should be excluded, consider scoping the pattern (e.g. `dist/**/*.log`).
+
+
+
+─── .gitignore:6-6 ───
+[maintainability · low] Without a trailing slash, `.skilld` matches both a file and a directory with
+that name. Since it is a directory (recreated by `skilld install`), use `.skilld/` to ignore only
+the directory and avoid unintentionally masking a file named `.skilld`.
+
+
+
+─── .gitignore:7-7 ───
+[maintainability · low] This pattern only excludes directories (due to trailing `/**`); a top-level
+file matching `*-skilld` will not be ignored, and the `*-skilld` suffix may not match the actual
+generated skill layout if Skilld uses a different naming scheme. Verify it covers all generated
+skills without accidentally excluding legitimate custom skills.
+
+
+
+─── .dockerignore:16-19 ───
+[security · high] Security: the Environment block excludes .env/.env.* files, but many other common
+credential carriers are not covered and could be inadvertently copied into the image and shipped to
+the registry (or leaked via build cache). Add explicit ignores for things like `.npmrc`, `.pypirc`,
+`.dockercfg`, `.docker/config.json`, private keys (`*.key`, `*.pem`, `*.p12`, `id_rsa`,
+`id_ed25519`), generic `credentials`, and service-account JSON keys (e.g. `*service-account*.json`,
+`gcloud-service-key.json`). These are sensitive auth files and worth excluding even when not
+currently present, to avoid future accidental inclusion.
+
+
+
+─── .dockerignore:17-18 ───
+[security · medium] The pattern `.env.*` requires a literal dot and therefore does not match
+`.envrc` or other dot-prefixed env files (direnv's `.envrc`) that commonly hold secrets/tool
+configuration. Consider using `.env*` (or explicitly adding `.envrc`) so these are consistently
+excluded from the build context.
+
+  .env
+- .env.*
++ .env*
+
+
+─── .dockerignore:56-56 ───
+[bug · low] Inconsistency in depth matching: several patterns (`*.md`, `*.tape`, `*.swp`,
+`debug.log`, `.history`, `.trunk`) lack a `**/` / `**` prefix, so under Go's filepath.Match
+semantics they only match files at the repository root. For example `*.md` will NOT exclude
+`docs/README.md` or `packages/foo/README.md`, and `*.swp` won't exclude nested editor swap files. If
+the intent is to exclude these everywhere (consistent with the `**/*.test.*` / `**/*.log` patterns
+above), prefix them with `**/`. At minimum, `*.md` should be `**/*.md` if docs are meant to be kept
+out of the build context to reduce image size.
+
+- *.md
++ **/*.md
+
+
+─── .trunk/.gitignore:1-5 ───
+[bug · medium] These unanchored wildcard patterns are overly broad and apply recursively at every
+level inside `.trunk`. For example `*out` will ignore any file or directory whose name *ends* with
+`out` (e.g. `layout`, `about`, `checkout`) anywhere in the subtree, and
+`*tools`/`*actions`/`*notifications` similarly ignore any path ending with those substrings. This
+risks silently excluding files that were meant to be tracked. Since these appear to target
+well-known *directories*, anchor and restrict them to the intended location and type, e.g. `/out/`,
+`/logs/`, `/actions/` (trailing slash limits the match to directories) or scope them under the
+actual paths (e.g. `plugins/`, `user_trunk.yaml` already are). If the wildcards are genuinely meant
+to match multiple generated directories, consider spelling them out explicitly to make the intent
+clear and avoid unintended matches.
+
+
+
+─── .trunk/.gitignore:9-9 ───
+[maintainability · low] The bare `tmp` pattern ignores any file or directory named `tmp` at any
+depth under `.trunk`, which may be broader than intended. Anchor/comment it (e.g. `tmp/` if it
+should only match a directory). Also consider adding brief comments to this file explaining each
+group of patterns; with only terse entries and no explanations, it is hard for future maintainers to
+judge whether an ignore rule is still necessary or whether the broad wildcards above are
+intentional.
+
+
+
+─── .editorconfig:26-26 ───
+[bug · high] Invalid EditorConfig glob. In EditorConfig syntax, `[...]` denotes a character class
+matching a *single character* (one of `*`, `.`, `g`, `o`, `,`, `M`, ...), not a comma-separated list
+of patterns. This section will never match `*.go` files or `Makefile`, so the intended 4-space/tab
+settings are silently dropped. Use brace expansion: `[{*.go,Makefile}]`, or preferably separate
+headers such as `[*.go]` and `[Makefile]` (both sharing the same indentation block), to correctly
+apply tab indentation.
+
+
+
+─── Dockerfile:37-37 ───
+[bug · medium] The healthcheck runs the exact same one-shot command as CMD (`node dist/cmd.js`).
+Because `cmd.js` is a stateless CLI that prints an ANSI profile and exits 0, the health status is
+meaningless — it will always be 'healthy' as long as the command starts, and it provides no insight
+into a long-running container. Worse, the health probe re-executes the full CLI every 60s, which is
+side-effectful: it invokes `update-notifier` (a network call to the npm registry), sleeps ~6s, and
+emits large ANSI output (up to `timeout=10s`). For a run-to-completion CLI, drop the `HEALTHCHECK`
+entirely (or only add one if the image is meant to serve something).
+
+
+
+─── Dockerfile:17-20 ───
+[bug · medium] `pnpm install --ignore-scripts` is used in both the build and prod-deps stages. The
+build stage immediately runs `pnpm run build`, which uses `esbuild` (a devDependency that ships a
+native/optional-platform binary set up via its postinstall hook) and `@biomejs/biome`. Skipping
+lifecycle scripts in the build stage can break these tools at build time. Likewise in the prod-deps
+stage, any runtime dependency relying on a postinstall step (native binding setup, binary install,
+etc.) would fail only at container runtime. Either drop `--ignore-scripts` where scripts are
+required, or move the script-dependent tooling out so that prod deps are unambiguously script-free.
+Verify the esbuild build actually works with `--ignore-scripts` before relying on it.
