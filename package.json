@@ -18,16 +18,15 @@
     "ora": "^9.4.1",
     "update-notifier": "^7.3.1"
   },
-  "description": "Meta package for syn",
+  "description": "Metapackage for syn",
   "devDependencies": {
-    "@biomejs/biome": "^2.5.11",
-    "@types/bun": "^1.4.0",
+    "@biomejs/biome": "^2.5.12",
     "@types/node": "^26.4.1",
     "skilld": "^2.3.0",
     "typescript": "^7.0.2"
   },
   "engines": {
-    "bun": "^1.4.0"
+    "node": "^24.20.0"
   },
   "files": [
     "dist"
@@ -36,7 +35,6 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@synmux/npm",
-  "packageManager": "bun@1.4.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/synmux/npm.git"
@@ -47,21 +45,15 @@
     "docker": "bun run docker:build && bun run docker:run",
     "docker:build": "docker build -t syn-horse:latest -f Dockerfile .",
     "docker:run": "docker run -it --rm syn-horse:latest",
-    "lint": "bun x @biomejs/biome check .",
-    "lint:fix": "bun x @biomejs/biome check --write .",
+    "lint": "pnpm exec @biomejs/biome check .",
+    "lint:fix": "pnpm exec @biomejs/biome check --write .",
     "prepublishOnly": "bun run lint:fix && bun run test && bun run build",
     "start": "bun src/cmd.ts",
     "gif": "vhs npm.tape && gif2webp -m 6 -min_size -mt -v assets/npm.gif -o assets/npm.webp && rm assets/npm.gif",
     "test": "bun test",
     "prepare": "skilld prepare || true"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "@google/genai",
-    "onnxruntime-node",
-    "protobufjs",
-    "sharp"
-  ],
   "type": "module",
-  "version": "1.0.8"
+  "version": "1.0.8",
+  "packageManager": "pnpm@12.4.1+sha512.2e81e399d73fe8390dab25e06aa788ab7a5908248d2f5a370f82b481147a6a7a367bf8048f9a6fdb6460f21a66f0542dedb8b94ca2c8723596741920b1656d4c"
 }

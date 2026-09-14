@@ -1,0 +1,8 @@
+allowBuilds:
+  '@google/genai': true
+  onnxruntime-node: true
+  protobufjs: true
+  sharp: true
+minimumReleaseAge: 10080 # minutes; 1 week
+autoInstallPeers: true
+childConcurrency: 16
