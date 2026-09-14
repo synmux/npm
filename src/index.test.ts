@@ -1,27 +1,27 @@
-import { beforeEach, describe, expect, it, spyOn } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import main from './index.ts'
 
 describe('main export', () => {
-  // Setup variables for testing
   let consoleLogOutput: string[] = []
 
   beforeEach(() => {
-    // Reset and capture console.log output
     consoleLogOutput = []
-    spyOn(console, 'log').mockImplementation((msg: string) => {
-      consoleLogOutput.push(msg)
+    vi.spyOn(console, 'log').mockImplementation((message: string) => {
+      consoleLogOutput.push(message)
     })
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
   })
 
   it('logs the expected intro and version', async () => {
     await main()
 
-    // Check that there are console log calls
     expect(consoleLogOutput.length).toBeGreaterThan(0)
 
-    // Check that some essential content is logged
     const allOutput = consoleLogOutput.join('\n')
-    expect(allOutput).toContain('https://syn.horse') //·Main·website
+    expect(allOutput).toContain('https://syn.horse') // Main website
     expect(allOutput).toContain('https://github.com/synmux') // At least one social link
   })
 })

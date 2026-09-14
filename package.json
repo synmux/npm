@@ -21,12 +21,21 @@
   "description": "Metapackage for syn",
   "devDependencies": {
     "@biomejs/biome": "^2.5.12",
-    "@types/node": "^26.4.1",
+    "@types/node": "^24.13.3",
+    "esbuild": "^0.28.2",
     "skilld": "^2.3.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "engines": {
     "node": "^24.20.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist"
@@ -35,25 +44,28 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "name": "@synmux/npm",
+  "packageManager": "pnpm@12.4.1+sha512.2e81e399d73fe8390dab25e06aa788ab7a5908248d2f5a370f82b481147a6a7a367bf8048f9a6fdb6460f21a66f0542dedb8b94ca2c8723596741920b1656d4c",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/synmux/npm.git"
   },
   "scripts": {
-    "build": "bun run clean && bun build --target node --minify --sourcemap ./src/index.ts ./src/cmd.ts --outdir dist",
+    "build": "pnpm run clean && esbuild src/index.ts src/cmd.ts --bundle --splitting --platform=node --target=node24 --format=esm --packages=external --outdir=dist && tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
-    "docker": "bun run docker:build && bun run docker:run",
+    "docker": "pnpm run docker:build && pnpm run docker:run",
     "docker:build": "docker build -t syn-horse:latest -f Dockerfile .",
     "docker:run": "docker run -it --rm syn-horse:latest",
-    "lint": "pnpm exec @biomejs/biome check .",
-    "lint:fix": "pnpm exec @biomejs/biome check --write .",
-    "prepublishOnly": "bun run lint:fix && bun run test && bun run build",
-    "start": "bun src/cmd.ts",
     "gif": "vhs npm.tape && gif2webp -m 6 -min_size -mt -v assets/npm.gif -o assets/npm.webp && rm assets/npm.gif",
-    "test": "bun test",
-    "prepare": "skilld prepare || true"
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:types": "tsc --noEmit",
+    "prepare": "skilld prepare || true",
+    "prepublishOnly": "pnpm run lint && pnpm run lint:types && pnpm run test && pnpm run build",
+    "start": "node src/cmd.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "type": "module",
-  "version": "1.0.8",
-  "packageManager": "pnpm@12.4.1+sha512.2e81e399d73fe8390dab25e06aa788ab7a5908248d2f5a370f82b481147a6a7a367bf8048f9a6fdb6460f21a66f0542dedb8b94ca2c8723596741920b1656d4c"
+  "types": "./dist/index.d.ts",
+  "version": "1.0.8"
 }
