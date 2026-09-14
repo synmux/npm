@@ -4,6 +4,7 @@ dist/
 
 # Skilld references (recreated by `skilld install`)
 .skilld
+.claude/skills/*-skilld/**
 
 # Serena code-intelligence cache (created on project activation)
 .serena/

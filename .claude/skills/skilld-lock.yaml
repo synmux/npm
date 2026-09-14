@@ -15,15 +15,59 @@ skills:
     generator: skilld
   biomejs-biome-skilld:
     packageName: "@biomejs/biome"
-    version: 2.5.11
+    version: 2.5.12
+    packages: "@biomejs/biome@2.5.12"
     repo: biomejs/biome
-    source: "https://github.com/biomejs/biome/tree/@biomejs/biome@2.5.11/docs"
-    syncedAt: 2026-09-01
+    source: "https://github.com/biomejs/biome/tree/@biomejs/biome@2.5.12/docs"
+    syncedAt: 2026-09-14
     generator: skilld
   skilld-skilld:
     packageName: skilld
     version: 2.3.0
+    packages: "skilld@2.3.0"
     repo: skilld-dev/skilld
-    source: "https://skilld.dev/**"
-    syncedAt: 2026-09-01
+    source: "https://github.com/skilld-dev/skilld/tree/v2.3.0/docs"
+    syncedAt: 2026-09-14
+    generator: skilld
+  cli-table3-skilld:
+    packageName: cli-table3
+    version: 0.6.5
+    repo: cli-table/cli-table3
+    source: "ungh://cli-table/cli-table3"
+    syncedAt: 2026-09-14
+    generator: skilld
+  gradient-string-skilld:
+    packageName: gradient-string
+    version: 3.0.0
+    repo: bokub/gradient-string
+    source: "ungh://bokub/gradient-string"
+    syncedAt: 2026-09-14
+    generator: skilld
+  types-node-skilld:
+    packageName: "@types/node"
+    version: 26.4.1
+    repo: DefinitelyTyped/DefinitelyTyped
+    source: readme
+    syncedAt: 2026-09-14
+    generator: skilld
+  ora-skilld:
+    packageName: ora
+    version: 9.4.1
+    repo: sindresorhus/ora
+    source: "ungh://sindresorhus/ora"
+    syncedAt: 2026-09-14
+    generator: skilld
+  chalk-skilld:
+    packageName: chalk
+    version: 6.0.0
+    repo: chalk/chalk
+    source: "ungh://chalk/chalk"
+    syncedAt: 2026-09-14
+    generator: skilld
+  typescript-skilld:
+    packageName: typescript
+    version: 7.0.2
+    repo: microsoft/TypeScript
+    source: "https://www.typescriptlang.org/**"
+    syncedAt: 2026-09-14
     generator: skilld
