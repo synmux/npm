@@ -10,13 +10,17 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
-        # nb: runs `pnpm install` itself, no need for a separate install step
+      - name: pnpm and node
+        uses: pnpm/setup@703c52620218391530e48b9e8870d5c0082e1b9b # v2.1.0
+        # nb: reads the pnpm version from `packageManager` and runs
+        # `pnpm install` itself, so there is no separate install step
         with:
           runtime: node@24
           cache: true
       - name: trunk
         uses: trunk-io/trunk-action@e1234e67a86010d61ddac8d8ebf4b783e2ffd2fa # v2.0.0
+      - name: lint
+        run: pnpm run lint
       - name: typecheck
         run: pnpm run lint:types
       - name: build
