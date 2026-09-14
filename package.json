@@ -23,6 +23,7 @@
     "@biomejs/biome": "^2.5.12",
     "@types/node": "^24.13.3",
     "esbuild": "^0.28.2",
+    "npm-run-all2": "^9.0.3",
     "skilld": "^2.3.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0"
@@ -50,22 +51,22 @@
     "url": "git+https://github.com/synmux/npm.git"
   },
   "scripts": {
-    "build": "pnpm run clean && esbuild src/index.ts src/cmd.ts --bundle --splitting --platform=node --target=node24 --format=esm --packages=external --outdir=dist && tsc -p tsconfig.build.json",
+    "build": "pnpm run clean && pnpm exec esbuild src/index.ts src/cmd.ts --bundle --splitting --platform=node --target=node24 --format=esm --packages=external --outdir=dist && pnpm exec tsc -p tsconfig.build.json",
     "clean": "rm -rf dist",
     "docker": "pnpm run docker:build && pnpm run docker:run",
     "docker:build": "docker build -t syn-horse:latest -f Dockerfile .",
     "docker:run": "docker run -it --rm syn-horse:latest",
     "gif": "vhs npm.tape && gif2webp -m 6 -min_size -mt -v assets/npm.gif -o assets/npm.webp && rm assets/npm.gif",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "lint:types": "tsc --noEmit",
-    "prepare": "skilld prepare || true",
-    "prepublishOnly": "pnpm run lint && pnpm run lint:types && pnpm run test && pnpm run build",
-    "start": "node src/cmd.ts",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "lint": "pnpm exec biome check .",
+    "lint:fix": "pnpm exec biome check --write .",
+    "lint:types": "pnpm exec tsc --noEmit",
+    "prepare": "pnpm exec skilld prepare || true",
+    "prepublishOnly": "pnpm run-s lint lint:types test build",
+    "start": "pnpm run build && node dist/cmd.js",
+    "test": "pnpm exec vitest run",
+    "test:watch": "pnpm exec vitest"
   },
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "1.0.8"
+  "version": "1.1.0"
 }
