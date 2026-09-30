@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Node 24 on Alpine, pinned by digest. Dependabot keeps the pin fresh.
-FROM node:26.9-alpine3.24@sha256:dbaa92e5758cbbcf85d65d5403fdb530fe3442cbe8c6dbfb7ef23365450d5070 AS base
+FROM node:26.10-alpine3.24@sha256:0b36e8c136b94cd4fcf02188228e76c31ad5872eef3fec8cbd2eee500cfd9e80 AS base
 
 # pnpm comes from Corepack, which reads the pinned version (and its integrity
 # hash) from the `packageManager` field in package.json.
