@@ -11,7 +11,7 @@
     "url": "https://github.com/synmux/npm/issues"
   },
   "dependencies": {
-    "chalk": "^6.0.0",
+    "chalk": "^6.0.1",
     "chalk-animation": "^2.0.3",
     "cli-table3": "^0.6.5",
     "gradient-string": "^3.0.0",
@@ -20,13 +20,13 @@
   },
   "description": "Metapackage for syn",
   "devDependencies": {
-    "@biomejs/biome": "^2.5.12",
-    "@types/node": "^24.13.3",
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^24.19.2",
     "esbuild": "^0.28.2",
     "npm-run-all2": "^9.0.3",
     "skilld": "^2.3.0",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.5"
   },
   "engines": {
     "node": "^24.20.0"
