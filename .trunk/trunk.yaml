@@ -30,7 +30,7 @@ lint:
     - grype@0.121.0
     - actionlint@1.7.12
     - biome@2.6.3
-    - checkov@3.3.30
+    - checkov@3.4.0
     - circleci@1.11.0
     - djlint@1.47.1
     - dotenv-linter@4.0.0
