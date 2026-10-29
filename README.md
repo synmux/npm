@@ -53,17 +53,17 @@ npm install @synmux/npm
 Then you can pull it in to your heart's content:
 
 ```js
-import syn from "@synmux/npm";
+import syn from '@synmux/npm'
 
-syn();
+syn()
 ```
 
 Or, if you're still clinging to CommonJS:
 
 ```js
-const { default: syn } = await import("@synmux/npm");
+const { default: syn } = await import('@synmux/npm')
 
-syn();
+syn()
 ```
 
 ## Development
@@ -79,7 +79,6 @@ If you want to contribute, ask yourself: why?
 ## Incoming
 
 Believe it or not, features are planned!
-
 - `--cv` / `-c` parameter to dump out my CV.
 - Fetching links (and CV, when implemented) from [my personal API](https://github.com/synmux/syn-horse).
   - There will always be a static fallback.
