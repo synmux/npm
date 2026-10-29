@@ -2,7 +2,7 @@
   "root": true,
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**", "!.trunk/"]
+    "includes": ["**", "!.trunk/", "!pnpm-lock.yaml"]
   },
   "css": {
     "formatter": {
